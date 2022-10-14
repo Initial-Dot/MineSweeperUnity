@@ -8,7 +8,7 @@ public class MineBlock : MonoBehaviour
     public uint BlockColumn { get { return m_BlockColumn; } }
     public bool isBomb = false;
     public bool isUnPacked = false;
-
+    public bool isFlaged = false;
     private Text _btnText;
     /// <summary>
     /// ÐÐ
@@ -56,6 +56,13 @@ public class MineBlock : MonoBehaviour
         Image img = GetComponent<Image>();
         img.sprite = BlockManager.Ins.BtnStatus[1];
     }
+
+    public void SetSprite(Sprite spr)
+    {
+        Image img = GetComponent<Image>();
+        img.sprite = spr;
+    }
+
     public void OpenBlockArea()
     {
         isUnPacked = true;

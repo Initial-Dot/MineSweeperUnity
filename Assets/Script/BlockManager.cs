@@ -66,6 +66,24 @@ public class BlockManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetMouseButtonDown(1))
+        {
+            var pos = Input.mousePosition;
+            pos.y = _Canvas.renderingDisplaySize.y - pos.y;
+            int col = (int)(pos.x / 32);
+            int row = (int)(pos.y / 32);
+            Debug.Log($"{row},{col}");
+            if (row < RowCount && col < ColCount)
+            {
+                var b = MineBlocks[row][col];
+                if (b.isUnPacked) return;
+                if (b.isFlaged)
+                    b.SetSprite(BtnStatus[0]);
+                else
+                    b.SetSprite(BtnStatus[2]);
+                b.isFlaged = !b.isFlaged;
+            }
 
+        }
     }
 }

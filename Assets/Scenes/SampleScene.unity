@@ -386,6 +386,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Canvas: {fileID: 1878026762}
   BlockPrefab: {fileID: 6023570230628037777, guid: 64a2eaa6efde95a4ea4a7dd1c8764aa6, type: 3}
+  BtnStatus:
+  - {fileID: 21300000, guid: 8950d7731716cd041b75816e2bf83d56, type: 3}
+  - {fileID: 21300000, guid: eef1e24dd13aa474a9b626fcc257bc93, type: 3}
   RowCount: 15
   ColCount: 20
   MineCount: 50

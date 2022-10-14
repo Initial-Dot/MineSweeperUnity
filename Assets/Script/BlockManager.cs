@@ -6,6 +6,7 @@ public class BlockManager : MonoBehaviour
 {
     public Canvas _Canvas;
     public GameObject BlockPrefab;
+    public List<Sprite> BtnStatus;
     public static BlockManager Ins { get { return _Ins; } }
     private static BlockManager _Ins;
     public MineBlock[][] MineBlocks;

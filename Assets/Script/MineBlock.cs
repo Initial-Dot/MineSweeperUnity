@@ -8,6 +8,7 @@ public class MineBlock : MonoBehaviour
     public uint BlockColumn { get { return m_BlockColumn; } }
     public bool isBomb = false;
     public bool isUnPacked = false;
+
     private Text _btnText;
     /// <summary>
     /// 行
@@ -50,9 +51,15 @@ public class MineBlock : MonoBehaviour
             OpenBlockArea();
         }
     }
+    private void SetUnPackedSprite()
+    {
+        Image img = GetComponent<Image>();
+        img.sprite = BlockManager.Ins.BtnStatus[1];
+    }
     public void OpenBlockArea()
     {
         isUnPacked = true;
+        SetUnPackedSprite();
         uint mineCount = GetMineCountArround();
         SetText(mineCount.ToString());
         Debug.Log($"地雷数量：{mineCount}");
@@ -110,7 +117,8 @@ public class MineBlock : MonoBehaviour
     {
         if (_btnText == null)
             _btnText = GetComponentInChildren<Text>();
-        _btnText.text = str;
+        if (str != "0")
+            _btnText.text = str;
     }
     public string GetText(string str)
     {

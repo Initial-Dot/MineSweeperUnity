@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class BlockManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class BlockManager : MonoBehaviour
     public static BlockManager Ins { get { return _Ins; } }
     private static BlockManager _Ins;
     public MineBlock[][] MineBlocks;
+
+    public MineBlock CurrBlock;
     //public List<MineBlock> MineBlockList;
     public uint RowCount = 15;
     public uint ColCount = 20;
@@ -68,22 +71,13 @@ public class BlockManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(1))
         {
-            var pos = Input.mousePosition;
-            pos.y = _Canvas.renderingDisplaySize.y - pos.y;
-            int col = (int)(pos.x / 32);
-            int row = (int)(pos.y / 32);
-            Debug.Log($"{row},{col}");
-            if (row < RowCount && col < ColCount)
-            {
-                var b = MineBlocks[row][col];
-                if (b.isUnPacked) return;
-                if (b.isFlaged)
-                    b.SetSprite(BtnStatus[0]);
-                else
-                    b.SetSprite(BtnStatus[2]);
-                b.isFlaged = !b.isFlaged;
-            }
-
+            if (CurrBlock == null)return;
+            if (CurrBlock.isUnPacked) return;
+            if (CurrBlock.isFlaged)
+                CurrBlock.SetSprite(BtnStatus[0]);
+            else
+                CurrBlock.SetSprite(BtnStatus[2]);
+            CurrBlock.isFlaged = !CurrBlock.isFlaged;
         }
     }
 }

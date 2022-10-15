@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class MineBlock : MonoBehaviour
+public class MineBlock : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 {
     public uint BlockRow { get { return m_BlockRow; } }
     public uint BlockColumn { get { return m_BlockColumn; } }
@@ -48,13 +49,17 @@ public class MineBlock : MonoBehaviour
         }
         else
         {
-            OpenBlockArea();
+            StartCoroutine(OpenBlockArea()) ;
         }
     }
     private void SetUnPackedSprite()
     {
         Image img = GetComponent<Image>();
         img.sprite = BlockManager.Ins.BtnStatus[1];
+        Button btn = GetComponent<Button>();
+        var cB = btn.colors;
+        cB.normalColor = new Color(0.9f, 0.9f, 0.9f);
+        btn.colors = cB;
     }
 
     public void SetSprite(Sprite spr)
@@ -63,7 +68,7 @@ public class MineBlock : MonoBehaviour
         img.sprite = spr;
     }
 
-    public void OpenBlockArea()
+    public IEnumerator OpenBlockArea()
     {
         isUnPacked = true;
         SetUnPackedSprite();
@@ -75,10 +80,12 @@ public class MineBlock : MonoBehaviour
             var bArround = GetBlockArround();
             foreach (var b in bArround)
             {
+                yield return 0;
                 if (b != null && !b.isBomb && !b.isUnPacked)
-                    b.OpenBlockArea();
+                    StartCoroutine(b.OpenBlockArea()) ;
             }
         }
+        yield break;
     }
     private uint GetMineCountArround()
     {
@@ -133,15 +140,15 @@ public class MineBlock : MonoBehaviour
             _btnText = GetComponentInChildren<Text>();
         return _btnText.text;
     }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        BlockManager.Ins.CurrBlock = null;
+    }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        BlockManager.Ins.CurrBlock = this;
+    }
     // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
+    
 }

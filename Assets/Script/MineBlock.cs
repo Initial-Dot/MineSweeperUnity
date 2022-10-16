@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
-public class MineBlock : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
+public class MineBlock : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
     public uint BlockRow { get { return m_BlockRow; } }
     public uint BlockColumn { get { return m_BlockColumn; } }
@@ -40,16 +40,18 @@ public class MineBlock : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
     public void BtnOnClick()
     {
         Debug.Log($"行：{m_BlockRow} | 列：{m_BlockColumn}");
+        if (isFlaged) return;
         if (isBomb)
         {
             isUnPacked = true;
             // you lose...
-            Debug.Log("you lose...");
             SetText("雷");
+            SetSprite(BlockManager.Ins.BtnStatus[0]);
+            BlockManager.Ins.SetPage(2);
         }
         else
         {
-            StartCoroutine(OpenBlockArea()) ;
+            StartCoroutine(OpenBlockArea());
         }
     }
     private void SetUnPackedSprite()
@@ -73,7 +75,7 @@ public class MineBlock : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
         isUnPacked = true;
         SetUnPackedSprite();
         uint mineCount = GetMineCountArround();
-        SetText(mineCount.ToString());
+        SetText((int)mineCount);
         Debug.Log($"地雷数量：{mineCount}");
         if (mineCount == 0)
         {
@@ -82,7 +84,7 @@ public class MineBlock : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
             {
                 yield return 0;
                 if (b != null && !b.isBomb && !b.isUnPacked)
-                    StartCoroutine(b.OpenBlockArea()) ;
+                    StartCoroutine(b.OpenBlockArea());
             }
         }
         yield break;
@@ -127,12 +129,30 @@ public class MineBlock : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
         }
         return blocks;
     }
+    public void ResetStatus()
+    {
+        m_BlockColumn = 0;
+        m_BlockRow = 0;
+        isBomb = false;
+        isUnPacked = false;
+        isFlaged = false;
+        //_btnText.text = "";
+    }
     public void SetText(string str)
     {
         if (_btnText == null)
             _btnText = GetComponentInChildren<Text>();
-        if (str != "0")
-            _btnText.text = str;
+        _btnText.text = str;
+    }
+    public void SetText(int str)
+    {
+        if (_btnText == null)
+            _btnText = GetComponentInChildren<Text>();
+        if (str == 0) return;
+        Debug.Log($"setText:{str}");
+        _btnText.text = str.ToString();
+        _btnText.color = BlockManager.Ins.TextColors[str - 1];
+        Debug.Log(_btnText.color.ToString());
     }
     public string GetText(string str)
     {
@@ -150,5 +170,5 @@ public class MineBlock : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
         BlockManager.Ins.CurrBlock = this;
     }
     // Start is called before the first frame update
-    
+
 }
